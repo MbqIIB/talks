@@ -1,0 +1,80 @@
+
+Deploying Kubernetes on AWS
+Using KOPS to deploy kubernetes on AWS
+Tags: kubernetes, aws, kops 
+
+Richard Gonzalez
+Technical Lead, Ultimate Software
+richard_gonzalez@ultimatesoftware.com
+
+* 
+
+.image img/kubernetes-architecture.png
+
+*  KOPS
+
+https://github.com/kubernetes/kops
+
+* Agenda
+
+- Initial setup
+- Configure cluster storage 
+- Creating a new kubernetes cluster
+- Validate/Edit/Delete
+
+* Initial setup
+
+Setup IAM user
+
+.play tasks/setup-iam-user.sh
+
+* Initial setup
+
+    # configure the aws client to use your new IAM user
+    aws configure           # Use your new access and secret key here
+    aws iam list-users      # you should see a list of all your IAM users here
+
+    # Because "aws configure" doesn't export these vars for kops to use, we export them now
+    export AWS_ACCESS_KEY_ID=<access key>
+    export AWS_SECRET_ACCESS_KEY=<secret key>
+
+* Configure cluster storage
+
+.play tasks/create-s3-bucket.sh
+
+and use versioning!
+
+.play tasks/put-s3-bucket-versioning.sh
+
+* Deploy
+
+Describe availability zones
+.play tasks/describe-availability-zones.sh
+
+Required environment variables
+.code tasks/env.sh
+
+.play tasks/deploy.sh
+
+* Validate the cluster
+
+.play tasks/validate.sh
+
+* Deploy kubernetes dashboard
+
+Kubernetes dashboard
+https://github.com/kubernetes/dashboard
+
+.play tasks/kubectl-create-kubedashboard.sh
+
+Proxy will handle authentication with apiserver and make dashboard available on:
+.link http://localhost:8001/ui http://localhost:8001/ui
+.play tasks/kubectl-proxy.sh
+
+* Edit the cluster
+
+.code tasks/edit.sh
+
+* Delete the cluster
+
+.play tasks/cleanup.sh
